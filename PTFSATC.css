@@ -1,0 +1,373 @@
+/* Base */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  color: #222;
+}
+
+a {
+  color: inherit;
+}
+
+/* Uppercase inputs */
+.upper {
+  text-transform: uppercase;
+}
+
+/* Navbar */
+.navbar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  gap: 8px;
+  background: #333;
+  padding: 10px 16px;
+  z-index: 10;
+}
+
+.navbar a {
+  color: #f2f2f2;
+  text-decoration: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+}
+
+.navbar a:hover {
+  background: #444;
+}
+
+.navbar a.active {
+  background: #3498db;
+  color: #fff;
+}
+
+/* Layout */
+.container {
+  padding: 20px;
+}
+
+.main-layout {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.sections {
+  flex: 2;
+  min-width: 0;
+}
+
+.airport-box {
+  flex: 1;
+  min-width: 280px;
+  background: #fafafa;
+  border: 1px solid #ddd;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+/* Inputs at top of each section */
+.input-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 12px 0 20px;
+}
+
+.input-row input[type="text"] {
+  flex: 1;
+  padding: 10px 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.input-row button {
+  padding: 10px 14px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  background: #3498db;
+  color: #fff;
+  cursor: pointer;
+}
+
+.input-row button:hover {
+  background: #2980b9;
+}
+
+/* Callsign item list */
+.list {
+  display: grid;
+  gap: 12px;
+}
+
+.item {
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 10px;
+  background: #fff;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Buttons inside items */
+.removeBtn {
+  padding: 6px 10px;
+  border: none;
+  background: #e74c3c;
+  color: #fff;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.removeBtn:hover {
+  background: #c0392b;
+}
+
+.mainBtn {
+  padding: 10px 14px;
+  font-size: 16px;
+  border: none;
+  background: #3498db;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.mainBtn:hover {
+  background: #2980b9;
+}
+
+/* Controls inside items */
+.controls {
+  margin-top: 10px;
+  padding: 12px;
+  background: #f6fbff;
+  border-radius: 8px;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px 16px;
+  align-items: end;
+}
+
+.fields label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.fields input[type="text"] {
+  padding: 8px 10px;
+  border: 1px solid #cfd8dc;
+  border-radius: 6px;
+}
+
+.checkbox-row {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+/* Wind section highlighted area */
+.wind-section {
+  margin-top: 12px;
+  padding: 10px;
+  background: #eaf6ff;
+  border-left: 4px solid #3498db;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.wind-section p {
+  margin: 0;
+}
+
+/* Phrase list */
+.phrases {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed #bcd;
+}
+
+.phrase-line {
+  margin: 6px 0;
+  font-weight: 600;
+}
+
+/* Airport module */
+.select-label {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.select-label select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #fff;
+}
+
+.map-viewport {
+  position: relative;
+  width: 600px;
+  height: 800px;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: grab;
+  margin-left: 95px;
+}
+
+.map-viewport.grabbing {
+  cursor: grabbing;
+}
+
+#mapImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+  user-select: none;
+  -webkit-user-drag: none;
+  max-width: none;
+}
+
+.map-hint {
+  margin-top: 8px;
+  margin-left: 115px;
+  font-size: 12px;
+  color: #666;
+}
+
+/* Red Change Button */
+#changeBtn {
+  display: block;
+  margin: 30px auto;
+  padding: 14px 28px;
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#changeBtn:hover {
+  background: darkred;
+}
+
+/* Popup background */
+#popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+/* Popup box */
+#popupBox {
+  width: 360px;
+  background: white;
+  padding: 22px;
+  border-radius: 10px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.35);
+}
+
+#popupBox h2 {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+#popupBox label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+  font-weight: bold;
+}
+
+#popupBox input {
+  padding: 9px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+
+.popup-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.popup-buttons button {
+  flex: 1;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#savePopupBtn {
+  background: #3498db;
+}
+
+#savePopupBtn:hover {
+  background: #2980b9;
+}
+
+#closePopupBtn {
+  background: #777;
+}
+
+#closePopupBtn:hover {
+  background: #555;
+}
+
+/* Small screens */
+@media (max-width: 900px) {
+  .main-layout {
+    flex-direction: column;
+  }
+
+  .airport-box {
+    width: 100%;
+  }
+
+  .map-viewport {
+    width: 100%;
+    max-width: 600px;
+    margin-left: 0;
+  }
+
+  .map-hint {
+    margin-left: 0;
+  }
+}

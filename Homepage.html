@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>LearnATC - Home</title>
+  <link rel="icon" href="ChatGPT Image Aug 17, 2025, 09_45_09 PM.png">
+  <link rel="stylesheet" href="Homepage.css">
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<div class="navbar">
+  <a href="Homepage.html" class="active">Home</a>
+  <a href="#PTFS">PTFS</a>
+  <a href="what.html">VATSIM</a>
+</div>
+
+  <!-- ✅ Overlay Text -->
+  <div class="slideshow-text">
+    <h2>Welcome to LearnATC</h2>
+    <p>Master VATSIM & PTFS ATC With Charts</p>
+  </div>
+
+  <!-- Buttons -->
+   <div class="Buttons">
+  <button class="PTFSb">PTFS</button>
+  <button class="VATSIMb">VATSIM</button>
+  </div>
+
+<!-- Slideshow Box -->
+<div class="box slideshow" aria-label="LearnATC photo slideshow">
+  <img class="slide active" src="4k1.jpg" alt="ATC radar screen">
+  <img class="slide" src="4k4.jpg" alt="Airport tower at sunset">
+  <img class="slide" src="4k2.jpg" alt="Runway lineup at dawn">
+  <img class="slide" src="4k3.jpg" alt="Approach charts on tablet">
+  <img class="slide" src="4k5.jpg" alt="Approach charts on tablet">
+
+  <div class="dots" role="tablist" aria-label="Slideshow dots">
+    <button class="dot active" aria-label="Go to slide 1" role="tab"></button>
+    <button class="dot" aria-label="Go to slide 2" role="tab"></button>
+    <button class="dot" aria-label="Go to slide 3" role="tab"></button>
+    <button class="dot" aria-label="Go to slide 4" role="tab"></button>
+    <button class="dot" aria-label="Go to slide 4" role="tab"></button>
+  </div>
+</div>
+
+<script>
+(function() {
+  const slides = Array.from(document.querySelectorAll('.slideshow .slide'));
+  const dots = Array.from(document.querySelectorAll('.slideshow .dot'));
+  const prev = document.querySelector('.slideshow .prev');
+  const next = document.querySelector('.slideshow .next');
+
+  let index = 0;
+  let timer = null;
+  const INTERVAL = 4000; // ms
+
+  function go(to) {
+    slides[index].classList.remove('active');
+    dots[index].classList.remove('active');
+    index = (to + slides.length) % slides.length;
+    slides[index].classList.add('active');
+    dots[index].classList.add('active');
+  }
+
+  function start() {
+    stop();
+    timer = setInterval(() => go(index + 1), INTERVAL);
+  }
+
+  function stop() {
+    if (timer) clearInterval(timer);
+    timer = null;
+  }
+
+  // Controls
+  dots.forEach((d, i) => d.addEventListener('click', () => { go(i); start(); }));
+
+  // Pause on hover (desktop)
+  const container = document.querySelector('.slideshow');
+  container.addEventListener('mouseenter', stop);
+  container.addEventListener('mouseleave', start);
+
+  // Keyboard support
+  container.setAttribute('tabindex', '0');
+  container.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') { go(index - 1); start(); }
+    if (e.key === 'ArrowRight') { go(index + 1); start(); }
+  });
+
+  // Preload images (optional)
+  slides.forEach(img => { const i = new Image(); i.src = img.src; });
+
+  start();
+})();
+</script>
+
+</body>
+</html>

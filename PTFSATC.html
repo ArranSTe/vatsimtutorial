@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>LearnATC - PTFS ATC</title>
+  <link rel="stylesheet" href="PTFSATC.css" />
+
+  <script defer>
+    /* ====================== GLOBAL CHANGE SETTINGS ======================= */
+    const atcSettings = {
+      wind: "",
+      windDirection: "",
+      takeoffRunway: "",
+      landingRunway: ""
+    };
+
+    /* ====================== HELPERS ======================= */
+    function toUpperLive(el) {
+      el.addEventListener("input", () => {
+        const p = el.selectionStart;
+        el.value = el.value.toUpperCase();
+
+        if (document.activeElement === el && p !== null) {
+          el.setSelectionRange(p, p);
+        }
+      });
+    }
+
+    function attachUppercaseAll(root) {
+      root.querySelectorAll('input[type="text"]').forEach(toUpperLive);
+    }
+
+    function getWindLine() {
+      return `Wind ${atcSettings.wind}knts at ${atcSettings.windDirection}`;
+    }
+
+    function rerenderAllPhrases() {
+      document.querySelectorAll(".item").forEach(item => {
+        if (typeof item.renderPhrases === "function") {
+          item.renderPhrases();
+        }
+      });
+    }
+
+    /* ================== PHRASE BUILDERS =================== */
+    function buildDeparture({ callsign, stand, holding, taxi, facing }) {
+      const C = callsign || "";
+      const S = stand || "";
+      const H = holding || "";
+      const R = atcSettings.takeoffRunway || "";
+      const T = taxi || "";
+      const F = facing || "";
+
+      return [
+        `${C} CLEARED TO PUSHBACK FROM STAND ${S} FACING ${F}.`,
+        `${C} TAXI TO HOLDING POINT ${H} RUNWAY ${R} VIA ${T}.`,
+        `${C} CLEARED TO ENTER RUNWAY ${R}.`,
+        `${C} CLEARED TO TAKEOFF RUNWAY ${R}.`,
+        `${C} OVER TO UNICOM 122.8 BYE BYE.`
+      ];
+    }
+
+    function buildLanding({ callsign, stand, taxi, vacate }) {
+      const C = callsign || "";
+      const S = stand || "";
+      const R = atcSettings.landingRunway || "";
+      const T = taxi || "";
+      const V = vacate || "";
+
+      return [
+        `${C} CLEARED TO LAND RUNWAY ${R}.`,
+        `${C} VACATE ${V}.`,
+        `${C} TAXI TO STAND ${S} VIA ${T}.`
+      ];
+    }
+
+    /* ================== ITEM FACTORIES ==================== */
+    function createDeparture(container, input) {
+      const text = input.value.trim().toUpperCase();
+      if (!text) return;
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "item";
+
+      const row = document.createElement("div");
+      row.className = "row";
+
+      const removeBtn = document.createElement("button");
+      removeBtn.className = "removeBtn";
+      removeBtn.textContent = "×";
+      removeBtn.addEventListener("click", () => wrapper.remove());
+
+      const mainBtn = document.createElement("button");
+      mainBtn.className = "mainBtn";
+      mainBtn.textContent = text;
+
+      row.appendChild(removeBtn);
+      row.appendChild(mainBtn);
+
+      const controls = document.createElement("div");
+      controls.className = "controls";
+      controls.style.display = "none";
+
+      const form = document.createElement("div");
+      form.className = "fields";
+      form.innerHTML = `
+        <label>Taxi <input type="text" class="upper fld-taxi" placeholder="TAXI"></label>
+        <label>Holding Point <input type="text" class="upper fld-holding" placeholder="HOLDING POINT"></label>
+        <label>Stand <input type="text" class="upper fld-stand" placeholder="STAND"></label>
+        <label>Facing <input type="text" class="upper fld-facing" placeholder="FACING"></label>
+
+        <div class="checkbox-row">
+          <label><input type="checkbox" class="chk-push"> Pushback</label>
+          <label><input type="checkbox" class="chk-takeoff"> Takeoff</label>
+        </div>
+      `;
+
+      const windBox = document.createElement("div");
+      windBox.className = "wind-section";
+
+      const phrasesBox = document.createElement("div");
+      phrasesBox.className = "phrases";
+
+      controls.appendChild(form);
+      controls.appendChild(windBox);
+      controls.appendChild(phrasesBox);
+
+      mainBtn.addEventListener("click", () => {
+        controls.style.display = controls.style.display === "none" ? "block" : "none";
+      });
+
+      const taxiInput = form.querySelector(".fld-taxi");
+      const holdingInput = form.querySelector(".fld-holding");
+      const standInput = form.querySelector(".fld-stand");
+      const facingInput = form.querySelector(".fld-facing");
+
+      attachUppercaseAll(form);
+
+      function render() {
+        windBox.innerHTML = `<p>${getWindLine()}</p>`;
+
+        const lines = buildDeparture({
+          callsign: text,
+          stand: standInput.value,
+          holding: holdingInput.value,
+          taxi: taxiInput.value,
+          facing: facingInput.value
+        });
+
+        phrasesBox.innerHTML = lines
+          .map(line => `<div class="phrase-line"><label><input type="checkbox"> ${line}</label></div>`)
+          .join("");
+      }
+
+      wrapper.renderPhrases = render;
+
+      [taxiInput, holdingInput, standInput, facingInput].forEach(el => {
+        el.addEventListener("input", render);
+      });
+
+      wrapper.appendChild(row);
+      wrapper.appendChild(controls);
+      container.appendChild(wrapper);
+
+      input.value = "";
+      input.focus();
+      render();
+    }
+
+    function createLanding(container, input) {
+      const text = input.value.trim().toUpperCase();
+      if (!text) return;
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "item";
+
+      const row = document.createElement("div");
+      row.className = "row";
+
+      const removeBtn = document.createElement("button");
+      removeBtn.className = "removeBtn";
+      removeBtn.textContent = "×";
+      removeBtn.addEventListener("click", () => wrapper.remove());
+
+      const mainBtn = document.createElement("button");
+      mainBtn.className = "mainBtn";
+      mainBtn.textContent = text;
+
+      row.appendChild(removeBtn);
+      row.appendChild(mainBtn);
+
+      const controls = document.createElement("div");
+      controls.className = "controls";
+      controls.style.display = "none";
+
+      const form = document.createElement("div");
+      form.className = "fields";
+      form.innerHTML = `
+        <label>Taxi <input type="text" class="upper fld-taxi" placeholder="TAXI"></label>
+        <label>Stand <input type="text" class="upper fld-stand" placeholder="STAND"></label>
+        <label>Vacate <input type="text" class="upper fld-vacate" placeholder="VACATE"></label>
+
+        <div class="checkbox-row">
+          <label><input type="checkbox" class="chk-landed"> Landed</label>
+        </div>
+      `;
+
+      const windBox = document.createElement("div");
+      windBox.className = "wind-section";
+
+      const phrasesBox = document.createElement("div");
+      phrasesBox.className = "phrases";
+
+      controls.appendChild(form);
+      controls.appendChild(windBox);
+      controls.appendChild(phrasesBox);
+
+      mainBtn.addEventListener("click", () => {
+        controls.style.display = controls.style.display === "none" ? "block" : "none";
+      });
+
+      const taxiInput = form.querySelector(".fld-taxi");
+      const standInput = form.querySelector(".fld-stand");
+      const vacateInput = form.querySelector(".fld-vacate");
+
+      attachUppercaseAll(form);
+
+      function render() {
+        windBox.innerHTML = `<p>${getWindLine()}</p>`;
+
+        const lines = buildLanding({
+          callsign: text,
+          stand: standInput.value,
+          taxi: taxiInput.value,
+          vacate: vacateInput.value
+        });
+
+        phrasesBox.innerHTML = lines
+          .map(line => `<div class="phrase-line"><label><input type="checkbox"> ${line}</label></div>`)
+          .join("");
+      }
+
+      wrapper.renderPhrases = render;
+
+      [taxiInput, standInput, vacateInput].forEach(el => {
+        el.addEventListener("input", render);
+      });
+
+      wrapper.appendChild(row);
+      wrapper.appendChild(controls);
+      container.appendChild(wrapper);
+
+      input.value = "";
+      input.focus();
+      render();
+    }
+
+    /* ============ POPUP MENU ============== */
+    function setupChangePopup() {
+      const changeBtn = document.getElementById("changeBtn");
+      const popupOverlay = document.getElementById("popupOverlay");
+      const closePopupBtn = document.getElementById("closePopupBtn");
+      const savePopupBtn = document.getElementById("savePopupBtn");
+
+      const windInput = document.getElementById("windInput");
+      const windDirectionInput = document.getElementById("windDirectionInput");
+      const takeoffRunwayInput = document.getElementById("takeoffRunwayInput");
+      const landingRunwayInput = document.getElementById("landingRunwayInput");
+
+      [windInput, windDirectionInput, takeoffRunwayInput, landingRunwayInput].forEach(toUpperLive);
+
+      changeBtn.addEventListener("click", () => {
+        popupOverlay.style.display = "flex";
+      });
+
+      closePopupBtn.addEventListener("click", () => {
+        popupOverlay.style.display = "none";
+      });
+
+      popupOverlay.addEventListener("click", e => {
+        if (e.target === popupOverlay) {
+          popupOverlay.style.display = "none";
+        }
+      });
+
+      savePopupBtn.addEventListener("click", () => {
+        atcSettings.wind = windInput.value.trim().toUpperCase();
+        atcSettings.windDirection = windDirectionInput.value.trim().toUpperCase();
+        atcSettings.takeoffRunway = takeoffRunwayInput.value.trim().toUpperCase();
+        atcSettings.landingRunway = landingRunwayInput.value.trim().toUpperCase();
+
+        popupOverlay.style.display = "none";
+        rerenderAllPhrases();
+      });
+    }
+
+    /* ============ ZOOM / PAN VIEWER FOR MAP ============== */
+    function setupMapViewer() {
+      const select = document.getElementById("airportSelect");
+      const viewport = document.getElementById("mapViewport");
+      const img = document.getElementById("mapImage");
+
+      const sources = {
+        rockford: "IRFD Ground Chart (1).jpg",
+        perth: "IPPH Ground Chart (1).jpg",
+        lukla: "ILKL Ground Chart.jpg",
+        tokyo: "ITKO Ground Chart (1).jpg",
+        larnaca: "ILAR Ground Chart.jpg",
+        izolirani: "IZOL Ground Chart.jpg",
+        grindavik: "IGRV Ground Chart.jpg",
+        south: "ISAU Ground Chart.jpg"
+      };
+
+      let scale = 1;
+      let minScale = 0.4;
+      let maxScale = 6;
+      let panX = 0;
+      let panY = 0;
+      let dragging = false;
+      let startX = 0;
+      let startY = 0;
+
+      function applyTransform() {
+        img.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+      }
+
+      function resetView() {
+        scale = 1;
+        panX = 0;
+        panY = 0;
+        applyTransform();
+      }
+
+      select.addEventListener("change", () => {
+        const key = select.value;
+        img.src = key ? sources[key] || "" : "";
+        resetView();
+      });
+
+      viewport.addEventListener("wheel", e => {
+        if (!img.src) return;
+        e.preventDefault();
+
+        const rect = viewport.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
+
+        const prevScale = scale;
+        const delta = -e.deltaY;
+        const factor = Math.exp(delta * 0.0015);
+
+        scale = Math.min(maxScale, Math.max(minScale, scale * factor));
+
+        const dx = (mx - panX) / prevScale;
+        const dy = (my - panY) / prevScale;
+
+        panX = mx - dx * scale;
+        panY = my - dy * scale;
+
+        applyTransform();
+      }, { passive: false });
+
+      viewport.addEventListener("mousedown", e => {
+        if (!img.src) return;
+
+        dragging = true;
+        startX = e.clientX - panX;
+        startY = e.clientY - panY;
+        viewport.classList.add("grabbing");
+      });
+
+      window.addEventListener("mousemove", e => {
+        if (!dragging) return;
+
+        panX = e.clientX - startX;
+        panY = e.clientY - startY;
+
+        applyTransform();
+      });
+
+      window.addEventListener("mouseup", () => {
+        dragging = false;
+        viewport.classList.remove("grabbing");
+      });
+
+      let touchMode = null;
+      let lastDist = 0;
+
+      viewport.addEventListener("touchstart", e => {
+        if (!img.src) return;
+
+        if (e.touches.length === 1) {
+          touchMode = "drag";
+          startX = e.touches[0].clientX - panX;
+          startY = e.touches[0].clientY - panY;
+        } else if (e.touches.length === 2) {
+          touchMode = "pinch";
+          lastDist = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+          );
+        }
+      }, { passive: false });
+
+      viewport.addEventListener("touchmove", e => {
+        if (!img.src) return;
+        e.preventDefault();
+
+        if (touchMode === "drag" && e.touches.length === 1) {
+          panX = e.touches[0].clientX - startX;
+          panY = e.touches[0].clientY - startY;
+          applyTransform();
+        } else if (touchMode === "pinch" && e.touches.length === 2) {
+          const dist = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+          );
+
+          const factor = dist / lastDist;
+          const rect = viewport.getBoundingClientRect();
+          const mx = (e.touches[0].clientX + e.touches[1].clientX) / 2 - rect.left;
+          const my = (e.touches[0].clientY + e.touches[1].clientY) / 2 - rect.top;
+
+          const prevScale = scale;
+          scale = Math.min(maxScale, Math.max(minScale, scale * factor));
+
+          const dx = (mx - panX) / prevScale;
+          const dy = (my - panY) / prevScale;
+
+          panX = mx - dx * scale;
+          panY = my - dy * scale;
+
+          lastDist = dist;
+          applyTransform();
+        }
+      }, { passive: false });
+
+      viewport.addEventListener("touchend", () => {
+        touchMode = null;
+      }, { passive: true });
+
+      viewport.addEventListener("dblclick", resetView);
+    }
+
+    /* ======================= BOOT ========================= */
+    document.addEventListener("DOMContentLoaded", () => {
+      toUpperLive(document.getElementById("departInput"));
+      toUpperLive(document.getElementById("landInput"));
+
+      const departContainer = document.getElementById("departContainer");
+      const landContainer = document.getElementById("landContainer");
+
+      document.getElementById("departAddBtn").addEventListener("click", () => {
+        createDeparture(departContainer, document.getElementById("departInput"));
+      });
+
+      document.getElementById("departInput").addEventListener("keydown", e => {
+        if (e.key === "Enter") {
+          createDeparture(departContainer, document.getElementById("departInput"));
+        }
+      });
+
+      document.getElementById("landAddBtn").addEventListener("click", () => {
+        createLanding(landContainer, document.getElementById("landInput"));
+      });
+
+      document.getElementById("landInput").addEventListener("keydown", e => {
+        if (e.key === "Enter") {
+          createLanding(landContainer, document.getElementById("landInput"));
+        }
+      });
+
+      setupChangePopup();
+      setupMapViewer();
+    });
+  </script>
+</head>
+
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <a href="#" class="active">Home</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+  </nav>
+
+  <main class="container main-layout">
+    <section class="sections">
+      <!-- Departure -->
+      <h2>Create Callsigns</h2>
+
+      <div class="input-row">
+        <input type="text" id="departInput" class="upper" placeholder="Enter Departure Callsign" />
+        <button id="departAddBtn" type="button">Add Callsign</button>
+      </div>
+
+      <div id="departContainer" class="list"></div>
+
+      <!-- Landing -->
+      <h2>Landing</h2>
+
+      <div class="input-row">
+        <input type="text" id="landInput" class="upper" placeholder="Enter Landing Callsign" />
+        <button id="landAddBtn" type="button">Add Callsign</button>
+      </div>
+
+      <div id="landContainer" class="list"></div>
+    </section>
+
+    <!-- Airport dropdown & zoomable map -->
+    <aside class="airport-box">
+      <h3>Airport Charts</h3>
+
+      <label class="select-label">
+        <span>Choose Airport</span>
+
+        <select id="airportSelect">
+          <option value="">-- Select Airport --</option>
+          <option value="rockford">Greater Rockford</option>
+          <option value="perth">Perth International Airport</option>
+          <option value="lukla">Lukla</option>
+          <option value="tokyo">Tokyo International Airport</option>
+          <option value="larnaca">Larnaca Airport</option>
+          <option value="izolirani">Izolirani</option>
+          <option value="grindavik">Grindavik</option>
+          <option value="south">Southemptona</option>
+        </select>
+      </label>
+
+      <div id="mapViewport" class="map-viewport" title="Scroll to zoom, drag to move, double-click to reset">
+        <img id="mapImage" alt="Airport chart" />
+      </div>
+
+      <div class="map-hint">
+        Scroll to zoom • Drag to move • Double-click to reset • Pinch to zoom touch
+      </div>
+    </aside>
+  </main>
+
+  <!-- Red Change Button -->
+  <button id="changeBtn" type="button">Change</button>
+
+  <!-- Popup Menu -->
+  <div id="popupOverlay">
+    <div id="popupBox">
+      <h2>Change ATC Details</h2>
+
+      <label>
+        Wind
+        <input type="text" id="windInput" placeholder="ENTER WIND" />
+      </label>
+
+      <label>
+        Wind Direction
+        <input type="text" id="windDirectionInput" placeholder="ENTER WIND DIRECTION" />
+      </label>
+
+      <label>
+        Take-off Runway
+        <input type="text" id="takeoffRunwayInput" placeholder="ENTER TAKE-OFF RUNWAY" />
+      </label>
+
+      <label>
+        Landing Runway
+        <input type="text" id="landingRunwayInput" placeholder="ENTER LANDING RUNWAY" />
+      </label>
+
+      <div class="popup-buttons">
+        <button id="savePopupBtn" type="button">Save</button>
+        <button id="closePopupBtn" type="button">Close</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

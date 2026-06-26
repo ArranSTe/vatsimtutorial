@@ -1,0 +1,155 @@
+
+
+  /* Optional header line */
+  .box h2{
+padding: 00px;
+  }
+
+  .box p{
+    margin: 0;
+    line-height: 1.5;
+    color: #222;
+  }
+
+  * { margin: 0; font-family: sans-serif; }
+
+/* Navbar (kept as you had) */
+.navbar { background-color: rgb(49,49,49); overflow: hidden; }
+.navbar a { float: left; display: block; color: #f2f2f2; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px; }
+.navbar a:hover { background-color: #164B7F; color: #fff; }
+.navbar a.active { background-color: #5c5c5c; color: #fff; }
+@media (max-width: 768px){ .navbar a { font-size: 14px; padding: 10px 12px; } }
+
+/* Slideshow Box */
+.box.slideshow {
+  margin: 0 auto;
+  width: 2511px;
+  height: 1350px;
+  aspect-ratio: 16 / 9;         /* keeps it responsive; remove if you prefer fixed height */
+  border-radius: 0px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.2);
+  position: relative;
+  overflow: hidden;
+  background: #000;
+}
+
+/* Slides */
+.slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;            /* fills without distortion */
+  opacity: 0;
+  transition: opacity 800ms ease-in-out;
+  will-change: opacity;
+}
+.slide.active { opacity: 1; }
+
+/* Controls */
+.nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(22, 75, 127, 0.8); /* LearnATC blue with transparency */
+  color: #fff;
+  border: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 26px;
+  line-height: 44px;
+  text-align: center;
+  user-select: none;
+}
+.nav:hover { filter: brightness(1.1); }
+.nav.prev { left: 14px; }
+.nav.next { right: 14px; }
+
+/* Dots */
+.dots {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+}
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: 2px solid #fff;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+}
+.dot.active,
+.dot:hover { background: #164B7F; border-color: #164B7F; }
+
+/* Small screens */
+@media (max-width: 768px) {
+  .box.slideshow { margin: 40px auto; border-radius: 20px; }
+  .nav { width: 38px; height: 38px; font-size: 22px; line-height: 38px; }
+}
+
+
+/* Text overlay */
+.slideshow-text {
+  position: absolute;
+  top: 40%;          /* vertically center */
+  left: 50%;         /* horizontally center */
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  text-shadow: 0 4px 12px rgba(0,0,0,0.7);
+  z-index: 2;        /* make sure it stays above images */
+  padding: 20px;
+}
+
+.slideshow-text h2 {
+  font-size: 80px;
+  margin-bottom: 12px;
+}
+
+.slideshow-text p {
+  font-size: 1.5rem;
+}
+
+/* smaller screens */
+@media (max-width: 768px) {
+  .slideshow-text h2 { font-size: 1.8rem; }
+  .slideshow-text p { font-size: 1rem; }
+}
+
+
+/* Buttons container (overlay) */
+.Buttons {
+  position: absolute;
+  top: 52%;               /* pushes below the text */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 20px;              /* space between buttons */
+  z-index: 3;             /* above slideshow images */
+}
+
+/* Button styles */
+.Buttons button {
+  padding: 12px 30px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: 0.3s;
+  background-color: #164B7F;  /* LearnATC blue */
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.Buttons button:hover {
+  background-color: #0f3258;
+  transform: translateY(-3px); /* slight lift */
+}

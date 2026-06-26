@@ -1,0 +1,27 @@
+* {
+  font-family: sans-serif;
+}
+
+h1{
+  font-size: 45px;
+  margin-top: 55px;
+}
+
+.box {
+  background-color: #164B7F;
+  padding: 50px;
+  padding-top: 15px;
+  width: 700px;
+  margin-left: 850px;
+  border-radius: 20px;
+}
+
+video {
+  margin-left: 25px;
+}
+
+.VideoTitle {
+  font-size: 35px;
+  color: white;
+  text-decoration: underline;
+}
