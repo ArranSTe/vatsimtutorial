@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>LearnATC - Vatsim</title>
+<link rel="icon" href="ChatGPT Image Aug 17, 2025, 09_45_09 PM.png">
+<style>
+
+* {
+    margin: 0%;
+    font-family: sans-serif;
+}
+
+h1 {
+    text-align: center;
+    font-size: 60px;
+    margin-bottom: 70px;
+}
+
+  #textContainer {
+    margin-top: 20px;
+    font-size: 16px;
+    white-space: pre-wrap; /* Preserves line breaks in the text */
+    border: 1px solid #ccc;
+    padding: 15px;
+    background-color: #f9f9f9;
+  }
+
+  .input-group {
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  label {
+    display: inline-block;
+    width: 150px; /* Give labels a fixed width for alignment */
+    margin-right: 10px;
+  }
+  input[type="text"],
+  select { /* Apply styles to select as well */
+    width: 200px;
+    padding: 5px;
+    border: 1px solid #ccc; /* Default border */
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
+  }
+  button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 1200px;
+    margin-top: 20px;
+    border-radius: 10px;
+  }
+  button:hover {
+    background-color: #45a049;
+    transition: 0.5s;
+  }
+  /* Style for bold and underlined titles */
+  .section-title {
+    font-weight: bold;
+    text-decoration: underline;
+    font-size: 20px;
+  }
+
+  /* Styles for validation error */
+  .error-input {
+    border-color: red;
+    background-color: #ffe6e6; /* Light red background */
+  }
+  .error-label {
+    color: red;
+  }
+  /* Style for placeholder text when in error state */
+  .error-input::placeholder {
+    color: red;
+  }
+
+  /* New styles for the navigation bar */
+  .navbar {
+    background-color: #333;
+    overflow: hidden;
+    margin-bottom: 20px; /* Add some space below the nav */
+  }
+
+  .navbar a {
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+  }
+
+  .navbar a:hover {
+    background-color: #ddd;
+    color: black;
+  }
+
+  .navbar a.active {
+    background-color: #4CAF50;
+    color: white;
+  }
+
+  .how {
+    margin-left: 1240px;
+    padding-top: 40px;
+    font-size: 14px;
+  }
+
+
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 40px; /* Adjust font size for smaller screens */
+    }
+
+    input[type="text"],
+    select {
+      max-width: 100%; /* Remove max-width for smaller screens */
+    }
+
+    button {
+      max-width: 100%; /* Remove max-width for smaller screens */
+    }
+  .navbar a {
+    font-size: 14px; /* Adjust font size for smaller screens */
+    padding: 10px 12px; /* Adjust padding for smaller screens */
+  }
+
+  .input-group label {
+    width: auto; /* Allow labels to adjust dynamically */
+    margin-right: 5px; /* Reduce margin for smaller screens */
+  }
+
+  .input-group input[type="text"],
+  .input-group select {
+    width: 90%; /* Adjust input width for smaller screens */
+    margin: 0 auto; /* Center inputs */
+  }
+
+  button {
+    margin-left: 0; /* Remove fixed margin for smaller screens */
+    display: block;
+    margin: 20px auto; /* Center button */
+  }
+
+  .how {
+    margin-left: 0; /* Remove fixed margin for smaller screens */
+    text-align: center; /* Center the link */
+  }
+  }
+  @media (max-width: 2832px) and (max-height: 1284px) {
+    h1 {
+      font-size: 50px; /* Adjust font size for this screen size */
+    }
+
+    input[type="text"],
+    select {
+      width: 300px; /* Adjust input width for this screen size */
+    }
+
+    button {
+      margin-left: 0%; /* Remove fixed margin for this screen size */
+      padding: 15px 30px; /* Adjust button padding */
+    }
+
+    .navbar a {
+      font-size: 16px; /* Adjust font size for navigation links */
+      padding: 12px 14px; /* Adjust padding for navigation links */
+    }
+
+    .input-group label {
+      width: auto; /* Allow labels to adjust dynamically */
+      margin-right: 10px; /* Adjust margin for labels */
+    }
+
+    .input-group input[type="text"],
+    .input-group select {
+      width: 80%; /* Adjust input width for this screen size */
+      margin: 0 auto; /* Center inputs */
+    }
+
+    .how {
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="navbar">
+  <a href="#home" class="active">Home</a>
+  <a href="#about">About</a>
+  <a href="#contact">Contact</a>
+</div>
+
+<h1>Vatsim ATC Guide</h1>
+
+<div class="input-group">
+  <label for="departureAirport" id="departureAirportLabel">Departure Airport ICAO:</label>
+  <input type="text" id="departureAirport" placeholder="">
+</div>
+<div class="input-group">
+  <label for="callsign" id="callsignLabel">Callsign:</label>
+  <input type="text" id="callsign" placeholder="">
+</div>
+<div class="input-group">
+  <label for="standNumber" id="standNumberLabel">Stand Number:</label>
+  <input type="text" id="standNumber" placeholder="">
+</div>
+<div class="input-group">
+  <label for="arrivalAirport" id="arrivalAirportLabel">Arrival Airport ICAO:</label>
+  <input type="text" id="arrivalAirport" placeholder="">
+</div>
+<div class="input-group">
+  <label for="aircraftType" id="aircraftTypeLabel">Aircraft Type:</label>
+  <select id="aircraftType">
+    <option value="">-- Select Aircraft Type --</option>
+    <option value="A220">A220</option>
+    <option value="A300">A300</option>
+    <option value="A306">A306</option>
+    <option value="A310">A310</option>
+    <option value="A318">A318</option>
+    <option value="A319">A319</option>
+    <option value="A320">A320</option>
+    <option value="A321">A321</option>
+    <option value="A20N">A20N (A320neo)</option>
+    <option value="A21N">A21N (A321neo)</option>
+    <option value="A332">A332</option>
+    <option value="A333">A333</option>
+    <option value="A339">A339 (A330-900neo)</option>
+    <option value="A340">A340</option>
+    <option value="A342">A342</option>
+    <option value="A343">A343</option>
+    <option value="A345">A345</option>
+    <option value="A346">A346</option>
+    <option value="A359">A359 (A350-900)</option>
+    <option value="A35K">A35K (A350-1000)</option>
+    <option value="A388">A388 (A380)</option>
+    <option value="AT43">AT43 (ATR 42)</option>
+    <option value="AT72">AT72 (ATR 72)</option>
+    <option value="B703">B703 (Boeing 707)</option>
+    <option value="B712">B712 (Boeing 717)</option>
+    <option value="B720">B720 (Boeing 720)</option>
+    <option value="B721">B721 (Boeing 727-100)</option>
+    <option value="B722">B722 (Boeing 727-200)</option>
+    <option value="B731">B731 (Boeing 737-100)</option>
+    <option value="B732">B732 (Boeing 737-200)</option>
+    <option value="B733">B733 (Boeing 737-300)</option>
+    <option value="B734">B734 (Boeing 737-400)</option>
+    <option value="B735">B735 (Boeing 737-500)</option>
+    <option value="B736">B736 (Boeing 737-600)</option>
+    <option value="B737">B737 (Boeing 737-700)</option>
+    <option value="B738">B738 (Boeing 737-800)</option>
+    <option value="B739">B739 (Boeing 737-900)</option>
+    <option value="B38M">B38M (Boeing 737 MAX 8)</option>
+    <option value="B39M">B39M (Boeing 737 MAX 9)</option>
+    <option value="B741">B741 (Boeing 747-100)</option>
+    <option value="B742">B742 (Boeing 747-200)</option>
+    <option value="B743">B743 (Boeing 747-300)</option>
+    <option value="B744">B744 (Boeing 747-400)</option>
+    <option value="B748">B748 (Boeing 747-8)</option>
+    <option value="B752">B752 (Boeing 757-200)</option>
+    <option value="B753">B753 (Boeing 757-300)</option>
+    <option value="B762">B762 (Boeing 767-200)</option>
+    <option value="B763">B763 (Boeing 767-300)</option>
+    <option value="B764">B764 (Boeing 767-400)</option>
+    <option value="B772">B772 (Boeing 777-200)</option>
+    <option value="B773">B773 (Boeing 777-300)</option>
+    <option value="B77L">B77L (Boeing 777-200LR)</option>
+    <option value="B77W">B77W (Boeing 777-300ER)</option>
+    <option value="B77X">B77X (Boeing 777X)</option>
+    <option value="B788">B788 (Boeing 787-8)</option>
+    <option value="B789">B789 (Boeing 787-9)</option>
+    <option value="B78X">B78X (Boeing 787-10)</option>
+    <option value="C130">C130 (C-130 Hercules)</option>
+    <option value="CRJ1">CRJ1 (CRJ100/200)</option>
+    <option value="CRJ2">CRJ2 (CRJ200)</option>
+    <option value="CRJ7">CRJ7 (CRJ700)</option>
+    <option value="CRJ9">CRJ9 (CRJ900)</option>
+    <option value="CRJX">CRJX (CRJ1000)</option>
+    <option value="CV58">CV58 (Convair 580)</option>
+    <option value="CVLT">CVLT (Cessna Caravan - generic turbine)</option>
+    <option value="DC3">DC3</option>
+    <option value="DC4">DC4</option>
+    <option value="DC6">DC6</option>
+    <option value="DC7">DC7</option>
+    <option value="DC81">DC81</option>
+    <option value="DC82">DC82</option>
+    <option value="DC83">DC83</option>
+    <option value="DC85">DC85</option>
+    <option value="DC86">DC86</option>
+    <option value="DC87">DC87</option>
+    <option value="DC91">DC91</option>
+    <option value="DC92">DC92</option>
+    <option value="DC93">DC93</option>
+    <option value="DC94">DC94</option>
+    <option value="DC95">DC95</option>
+    <option value="DC10">DC10</option>
+    <option value="DH8A">DH8A (Dash 8-100)</option>
+    <option value="DH8B">DH8B (Dash 8-200)</option>
+    <option value="DH8C">DH8C (Dash 8-300)</option>
+    <option value="DH8D">DH8D (Dash 8-400)</option>
+    <option value="E110">E110 (EMB 110)</option>
+    <option value="E120">E120 (EMB 120)</option>
+    <option value="E135">E135 (ERJ 135)</option>
+    <option value="E140">E140 (ERJ 140)</option>
+    <option value="E145">E145 (ERJ 145)</option>
+    <option value="E170">E170 (E-Jet 170)</option>
+    <option value="E175">E175 (E-Jet 175)</option>
+    <option value="E190">E190 (E-Jet 190)</option>
+    <option value="E195">E195 (E-Jet 195)</option>
+    <option value="F27">F27 (Fokker F27)</option>
+    <option value="F28">F28 (Fokker F28)</option>
+    <option value="F50">F50 (Fokker 50)</option>
+    <option value="F70">F70 (Fokker 70)</option>
+    <option value="F100">F100 (Fokker 100)</option>
+    <option value="IL18">IL18 (Ilyushin Il-18)</option>
+    <option value="IL62">IL62 (Ilyushin Il-62)</option>
+    <option value="IL76">IL76 (Ilyushin Il-76)</option>
+    <option value="IL86">IL86 (Ilyushin Il-86)</option>
+    <option value="IL96">IL96 (Ilyushin Il-96)</option>
+    <option value="JS31">JS31 (Jetstream 31)</option>
+    <option value="JS32">JS32 (Jetstream 32)</option>
+    <option value="L104">L104 (Lockheed Constellation)</option>
+    <option value="L188">L188 (Lockheed Electra)</option>
+    <option value="L101">L101 (L-1011 TriStar)</option>
+    <option value="MD11">MD11</option>
+    <option value="MD81">MD81</option>
+    <option value="MD82">MD82</option>
+    <option value="MD83">MD83</option>
+    <option value="MD87">MD87</option>
+    <option value="MD88">MD88</option>
+    <option value="MD90">MD90</option>
+    <option value="P8">P8 (P-8 Poseidon)</option>
+    <option value="SB20">SB20 (Saab 2000)</option>
+    <option value="SF34">SF34 (Saab 340)</option>
+    <option value="SU95">SU95 (Superjet 100)</option>
+    <option value="TRID">TRID (Hawker Siddeley Trident)</option>
+    <option value="TU13">TU13 (Tupolev Tu-134)</option>
+    <option value="TU20">TU20 (Tupolev Tu-204/214)</option>
+    <option value="TU34">TU34 (Tupolev Tu-334)</option>
+    <option value="TU54">TU54 (Tupolev Tu-154)</option>
+    <option value="VC10">VC10 (Vickers VC10)</option>
+  </select>
+</div>
+
+<a class="how" href="How.html">How To Use?</a>
+
+<button id="generateTextButton">Generate ATC Text</button>
+
+<div id="textContainer" style="display: none;">
+  <!-- The ATC text will be inserted here by JavaScript -->
+</div>
+
+<script>
+  document.getElementById('generateTextButton').addEventListener('click', function() {
+    // Get the input elements
+    var departureAirportInput = document.getElementById('departureAirport');
+    var callsignInput = document.getElementById('callsign');
+    var standNumberInput = document.getElementById('standNumber');
+    var arrivalAirportInput = document.getElementById('arrivalAirport');
+    var aircraftTypeSelect = document.getElementById('aircraftType'); // Changed to select
+
+    // Get the label elements
+    var departureAirportLabel = document.getElementById('departureAirportLabel');
+    var callsignLabel = document.getElementById('callsignLabel');
+    var standNumberLabel = document.getElementById('standNumberLabel');
+    var arrivalAirportLabel = document.getElementById('arrivalAirportLabel');
+    var aircraftTypeLabel = document.getElementById('aircraftTypeLabel');
+
+    // Store original label texts
+    var originalLabels = {
+      departureAirport: "Departure Airport Name:",
+      callsign: "Callsign:",
+      standNumber: "Stand Number:",
+      arrivalAirport: "Arrival Airport Name:",
+      aircraftType: "Aircraft Type:"
+    };
+
+    // Store original placeholders (only for input fields)
+    var originalPlaceholders = {
+        departureAirport: departureAirportInput.placeholder,
+        callsign: callsignInput.placeholder,
+        standNumber: standNumberInput.placeholder,
+        arrivalAirport: arrivalAirportInput.placeholder
+    };
+
+
+    var isValid = true; // Flag to track overall validation status
+
+    // --- Reset previous error states ---
+    departureAirportInput.classList.remove('error-input');
+    departureAirportLabel.classList.remove('error-label');
+    departureAirportLabel.textContent = originalLabels.departureAirport;
+    departureAirportInput.placeholder = originalPlaceholders.departureAirport; // Reset placeholder
+
+    callsignInput.classList.remove('error-input');
+    callsignLabel.classList.remove('error-label');
+    callsignLabel.textContent = originalLabels.callsign;
+    callsignInput.placeholder = originalPlaceholders.callsign; // Reset placeholder
+
+    standNumberInput.classList.remove('error-input');
+    standNumberLabel.classList.remove('error-label');
+    standNumberLabel.textContent = originalLabels.standNumber;
+    standNumberInput.placeholder = originalPlaceholders.standNumber; // Reset placeholder
+
+    arrivalAirportInput.classList.remove('error-input');
+    arrivalAirportLabel.classList.remove('error-label');
+    arrivalAirportLabel.textContent = originalLabels.arrivalAirport;
+    arrivalAirportInput.placeholder = originalPlaceholders.arrivalAirport; // Reset placeholder
+
+    // Reset error for the select element
+    aircraftTypeSelect.classList.remove('error-input');
+    aircraftTypeLabel.classList.remove('error-label');
+    aircraftTypeLabel.textContent = originalLabels.aircraftType;
+    // --- End Reset ---
+
+
+    // --- Validation Checks ---
+
+    // Check if Departure Airport is empty or not 4 characters
+    var departureAirport = departureAirportInput.value.trim();
+    if (departureAirport === '' || departureAirport.length !== 4) {
+      departureAirportInput.classList.add('error-input');
+      departureAirportLabel.classList.add('error-label');
+      departureAirportLabel.textContent = originalLabels.departureAirport + " *";
+      if (departureAirport === '') {
+          departureAirportInput.placeholder = "Required!"; // Set error placeholder for empty
+      } else {
+          departureAirportInput.placeholder = "Must be 4 letters!"; // Set error placeholder for incorrect length
+      }
+      isValid = false;
+    }
+
+    // Check if Callsign is empty
+    var callsign = callsignInput.value.trim();
+    if (callsign === '') {
+      callsignInput.classList.add('error-input');
+      callsignLabel.classList.add('error-label');
+      callsignLabel.textContent = originalLabels.callsign + " *";
+      callsignInput.placeholder = "Required!"; // Set error placeholder
+      isValid = false;
+    }
+
+    // Check Stand Number (empty, non-numeric, or less than 2 digits)
+    var standNumber = standNumberInput.value.trim();
+    var containsNonDigits = /\D/.test(standNumber);
+    var isTooShort = standNumber.length < 2; // Check if length is less than 2
+
+    if (standNumber === '' || containsNonDigits || isTooShort) {
+      standNumberInput.classList.add('error-input');
+      standNumberLabel.classList.add('error-label');
+      standNumberLabel.textContent = originalLabels.standNumber + " *";
+
+      if (standNumber === '') {
+          standNumberInput.placeholder = "Required!"; // Empty
+      } else if (containsNonDigits) {
+          standNumberInput.placeholder = "Must Be A Number!"; // Non-digits
+      } else if (isTooShort) {
+          standNumberInput.placeholder = "At least 2 digits!"; // Too short
+      }
+      isValid = false;
+    }
+
+
+    // Check if Arrival Airport is empty or not 4 characters
+    var arrivalAirport = arrivalAirportInput.value.trim();
+    if (arrivalAirport === '' || arrivalAirport.length !== 4) {
+      arrivalAirportInput.classList.add('error-input');
+      arrivalAirportLabel.classList.add('error-label');
+      arrivalAirportLabel.textContent = originalLabels.arrivalAirport + " *";
+       if (arrivalAirport === '') {
+          arrivalAirportInput.placeholder = "Required!"; // Set error placeholder for empty
+      } else {
+          arrivalAirportInput.placeholder = "Must be 4 letters!"; // Set error placeholder for incorrect length
+      }
+      isValid = false;
+    }
+
+    // Check if Aircraft Type is selected (value is not empty)
+    var aircraftType = aircraftTypeSelect.value;
+    if (aircraftType === '') {
+      aircraftTypeSelect.classList.add('error-input');
+      aircraftTypeLabel.classList.add('error-label');
+      aircraftTypeLabel.textContent = originalLabels.aircraftType + " *";
+      isValid = false;
+    }
+
+    // --- End Validation Checks ---
+
+
+    if (!isValid) {
+      // If validation failed, hide the generated text and clear inputs
+      document.getElementById('textContainer').style.display = 'none';
+
+      // --- Clear the input fields even if there's an error ---
+      departureAirportInput.value = '';
+      callsignInput.value = '';
+      standNumberInput.value = ''; // Clear the invalid stand number
+      arrivalAirportInput.value = '';
+      aircraftTypeSelect.value = ''; // Reset the select to the default option
+      // --- End Clear Input Fields ---
+
+      return; // Stop the function execution
+    }
+
+
+    // Get the input values again (using trimmed values for consistency)
+    var departureAirport = departureAirportInput.value.trim();
+    var callsign = callsignInput.value.trim();
+    var standNumber = standNumberInput.value.trim();
+    var arrivalAirport = arrivalAirportInput.value.trim();
+    var aircraftType = aircraftTypeSelect.value; // Get value from the select
+
+    // The base ATC text with dynamic content
+    var baseATCText = `How to talk to ATC ( Departure )
+
+<span class="section-title">ATIS</span>
+
+First Listen to the atis to get the information !!!
+Once you get your information eg. Alpha you can proceed. If no ATIS available simply say no Information or dont mention it, Listen out for.
+
+<span class="section-title">Delivery</span>
+
+With Information:
+Template: ${departureAirport} Delivery, this is ${callsign} at Stand ${standNumber} Aircraft type ${aircraftType} Request IFR Clearance to ${arrivalAirport} with information XXX ONH XXX Onboard
+
+Template: ${callsign} Cleared to ${arrivalAirport} via XXX Departure, Squawking
+
+<span class="section-title">Ground</span>
+
+Tip If you not aware how to move on ground at certain airport, google airport ICAO and chart eg. EGKK Charts, and find ground charts, there you will see taxi ways and holding points.
+
+Pushback :tractor:
+
+Template: ${departureAirport} Ground, ${callsign} at stand ${standNumber} , Aircraft Type request Push and Start
+ATC ${callsign} Push and Start Approved facing South
+
+Template: Push and Start Approved facing South ${callsign}
+
+<span class="section-title">Taxi</span>
+
+Template: ${departureAirport} Ground, ${callsign} Pushed back from stand ${standNumber} request taxi.
+ATC
+${callsign} Taxi to Holding point Via Taxiway
+Example to what ATC might say, ${callsign} Taxi to Holding point Juliet 2, via Kilo, Qubec, Juliet.
+
+Template: Taxi to Holding point Via Taxiway , ${callsign}
+ONCE YOU APPROACH THE HOLDING POINT YOU GET TOLD TO CONTACT TOWER
+
+<span class="section-title">Tower</span>
+
+Sometimes when you contact tower he might tell you to go to another holding point.
+
+Template: ${callsign} With you, taxing to Holding point
+
+ATC ${callsign} taxi to Juliet 2 and hold.
+
+Template: Taxi and Hold, juliet 2. ${callsign}
+
+ATC ${callsign} You are clear for takeoff Runway Runway Number
+
+Template: Clear for takeoff runway Runway Number , ${callsign}
+Once you take off you will get told to contact a Centre if online, if not you get told to monitor unicom on 122.800
+
+ATC ${callsign} No Further ATC service available monitor unicom on 122.800
+Template: ${callsign} Moving to 122.800, bye bye.
+
+
+<span class="section-title">In Centre</span>
+
+On First Contact
+Template: Centre Name , ${callsign} With you at Flight Level Inbound Waypoint
+ATC ${callsign} Identified.
+
+Now sometimes the atc might tell you to direct to another waypoint due to traffic or him being bored, e.g.
+ATC ${callsign} Identified, Direct to Waypoint
+
+Template:Directing to Waypoint , ${callsign}
+
+Once you Leave a Sector you get told to monitor unicom, or if available contact another sector
+
+If you are reaching T/D ( Top Of Descent ) Simply by informing the controller:
+
+Template: ${callsign} approaching top of descent.
+ATC ${callsign} Descent to Flight Level
+
+Template: ${callsign} Descending to Flight Level
+If you are approaching your airport after Top Of Descent and still in Centres sector, he will tell you to contact the arrival airport Approach if available, if not he will help you with the approach, that is of course if the sector control is controlling your area.
+
+
+<span class="section-title">How to talk to ATC ( Approach )</span>
+If Approach is Available you would contact them
+Tip: If you dont have a certain STAR because your AIRAC is outdated, simply say unable to do that arrival, something in those lines.
+
+Template: ${callsign} With you Descending to Flight level
+What ATC might say?
+ATC ${callsign} Identified, expect STAR Arrival for runway Runway Number
+ATC ${callsign} Identified, expect vectors to runway Runway Number
+
+How to Reply?
+Template:Expect STAR Arrival for runway Runway Number , ${callsign}
+
+Template:Expect vectors to runway Runway Number ${callsign}
+
+Once you approach the runway, and around 25 miles away or so, you will get told to contact tower
+( If tower is available )
+
+ATC ${callsign} Contact ${arrivalAirport} Tower on Frequency
+
+Template: Contacting ${arrivalAirport} Tower on Frequency , ${callsign}
+
+BEFORE CONTACTING TOWER
+If ATIS for arrival airport is available make sure to listen to it as you will need the information code for arrival too for a landing clearance, if no atis, simply dont give the atis code.
+Also if you didnt get a STAR, simply just say you on vectors
+
+
+<span class="section-title">Contacting Tower</span>
+
+Template: ${arrivalAirport} Tower, ${callsign} with a STAR Arrival, request landing clearance for runway 25L with information ATIS information
+<u>YOU CAN ALSO SAY YOU ARE ON FINAL, OR WITH YOU APPROACHING RUNWAY</u> #/b][/u][/i]
+
+ATC ${callsign} Clear to land Runway Runway Number ( ATC will also give some information about weather
+
+<span class="section-title">How to talk to ATC ( At Arrival )</span>
+
+On landing ATC will probably tell you when to turn off, also depending on airport he will tell you what Holding point to turn off at and what side, which is why charts are important.
+
+Once turned off Tower will tell you to contact ground if available
+
+ATC ${callsign} Contact ground on Frequency
+
+Template: Contacting ${arrivalAirport} on Frequency , ${callsign}
+
+<span class="section-title">Ground</span>
+Template: ${arrivalAirport} , ${callsign} with you Holding point , request taxi to Say where you want to taxi to
+ATC ${callsign} Taxi to stand ${standNumber} via Taxiways
+
+Template: Taxing to stand ${standNumber} via Taxiways , ${callsign}
+Just a note, sometimes centres might give you a new squawk code.`;
+
+    // Replace placeholders in the base text with input values
+    var updatedText = baseATCText
+      .replace(/\$\{departureAirport\}/g, departureAirport)
+      .replace(/\$\{callsign\}/g, callsign)
+      .replace(/\$\{standNumber\}/g, standNumber) // Use the validated standNumber
+      .replace(/\$\{arrivalAirport\}/g, arrivalAirport)
+      .replace(/\$\{aircraftType\}/g, aircraftType); // Use the selected aircraft type
+
+    // Get the text container element
+    var textContainer = document.getElementById('textContainer');
+
+    // Set the content of the text container using innerHTML
+    textContainer.innerHTML = updatedText;
+
+    // Make the text container visible
+    textContainer.style.display = 'block';
+
+    // --- Clear the input fields after processing (whether valid or not) ---
+    departureAirportInput.value = '';
+    callsignInput.value = '';
+    standNumberInput.value = ''; // Clear the invalid stand number
+    arrivalAirportInput.value = '';
+    aircraftTypeSelect.value = ''; // Reset the select to the default option
+    // --- End Clear Input Fields ---
+  });
+
+  // Removed the input event listener as validation and placeholder logic are now on button click
+  // document.getElementById('standNumber').addEventListener('input', function() { ... });
+</script>
+
+</body>
+</html>
